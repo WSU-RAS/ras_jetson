@@ -138,6 +138,8 @@ Setting WSU-RAS repos to use SSH (if desired):
     git remote set-url origin git@github.com:WSU-RAS/cob_perception_msgs.git
     cd ~/ras_jetson/src/darknet_ros
     git remote set-url origin git@github.com:WSU-RAS/darknet_ros.git
+    cd ~/ras_jetson/src/human-detection
+    git remote set-url origin git@github.com:WSU-RAS/human-detection.git
 
     # Verify they're correct:
     git submodule foreach git remote get-url --all origin
