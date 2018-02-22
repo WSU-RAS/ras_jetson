@@ -131,6 +131,7 @@ Create our Catkin workspace:
 Setting WSU-RAS repos to use SSH (if desired):
 
     cd ~/ras_jetson/src
+    git submodule update --init --recursive
     cd object_detection; git remote set-url origin git@github.com:WSU-RAS/object_detection.git; cd ..
     cd object_detection_msgs; git remote set-url origin git@github.com:WSU-RAS/object_detection_msgs.git; cd ..
     cd cob_perception_msgs; git remote set-url origin git@github.com:WSU-RAS/cob_perception_msgs.git; cd ..
