@@ -25,3 +25,6 @@
 [submodule "src/cob_perception_msgs"]
 	path = src/cob_perception_msgs
 	url = https://github.com/WSU-RAS/cob_perception_msgs
+[submodule "src/object_detection_msgs"]
+	path = src/object_detection_msgs
+	url = https://github.com/WSU-RAS/object_detection_msgs.git
