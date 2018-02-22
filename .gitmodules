@@ -31,3 +31,6 @@
 [submodule "src/human-detection"]
 	path = src/human-detection
 	url = https://github.com/WSU-RAS/human-detection.git
+[submodule "src/ras_msgs"]
+	path = src/ras_msgs
+	url = https://github.com/WSU-RAS/ras_msgs.git
