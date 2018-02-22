@@ -130,16 +130,12 @@ Create our Catkin workspace:
 
 Setting WSU-RAS repos to use SSH (if desired):
 
-    cd ~/ras_jetson/src/object_detection
-    git remote set-url origin git@github.com:WSU-RAS/object_detection.git
-    cd ~/ras_jetson/src/object_detection_msgs
-    git remote set-url origin git@github.com:WSU-RAS/object_detection_msgs.git
-    cd ~/ras_jetson/src/cob_perception_msgs
-    git remote set-url origin git@github.com:WSU-RAS/cob_perception_msgs.git
-    cd ~/ras_jetson/src/darknet_ros
-    git remote set-url origin git@github.com:WSU-RAS/darknet_ros.git
-    cd ~/ras_jetson/src/human-detection
-    git remote set-url origin git@github.com:WSU-RAS/human-detection.git
+    cd ~/ras_jetson/src
+    cd object_detection; git remote set-url origin git@github.com:WSU-RAS/object_detection.git; cd ..
+    cd object_detection_msgs; git remote set-url origin git@github.com:WSU-RAS/object_detection_msgs.git; cd ..
+    cd cob_perception_msgs; git remote set-url origin git@github.com:WSU-RAS/cob_perception_msgs.git; cd ..
+    cd darknet_ros; git remote set-url origin git@github.com:WSU-RAS/darknet_ros.git; cd ..
+    cd human-detection; git remote set-url origin git@github.com:WSU-RAS/human-detection.git; cd ..
 
     # Verify they're correct:
     git submodule foreach git remote get-url --all origin
