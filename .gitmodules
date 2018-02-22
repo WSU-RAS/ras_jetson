@@ -1,0 +1,27 @@
+[submodule "src/astra_launch"]
+	path = src/astra_launch
+	url = https://github.com/orbbec/ros_astra_launch.git
+[submodule "src/astra_camera"]
+	path = src/astra_camera
+	url = https://github.com/orbbec/ros_astra_camera.git
+[submodule "src/rgbd_launch"]
+	path = src/rgbd_launch
+	url = https://github.com/ros-drivers/rgbd_launch.git
+[submodule "src/darknet_ros"]
+	path = src/darknet_ros
+	url = https://github.com/WSU-RAS/darknet_ros.git
+[submodule "src/image_pipeline"]
+	path = src/image_pipeline
+	url = https://github.com/ros-perception/image_pipeline
+[submodule "src/arbotix_ros"]
+	path = src/arbotix_ros
+	url = https://github.com/vanadiumlabs/arbotix_ros.git
+[submodule "src/geometry2"]
+	path = src/geometry2
+	url = https://github.com/ros/geometry2
+[submodule "src/object_detection"]
+	path = src/object_detection
+	url = https://github.com/WSU-RAS/object_detection.git
+[submodule "src/cob_perception_msgs"]
+	path = src/cob_perception_msgs
+	url = https://github.com/WSU-RAS/cob_perception_msgs
