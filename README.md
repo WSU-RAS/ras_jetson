@@ -155,6 +155,7 @@ Build everything:
     cd ~/ras_jetson
     catkin_make --pkg darknet_ros_msgs # Needs to be built before darknet_ros
     catkin_make -DFILTER=OFF -DCMAKE_BUILD_TYPE=Release
+    catkin_make install
 
 Source this new workspace:
 
