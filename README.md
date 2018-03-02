@@ -223,10 +223,7 @@ In *~/.bashrc* on the NUC:
     export TURTLEBOT_3D_SENSOR=astra
     export TURTLEBOT3_MODEL=waffle
 
-Make sure you have Cartographer installed, see
-[instructions](https://google-cartographer-ros.readthedocs.io/en/latest/).
-Then, for example, if you put it in *~/cartographer_ws*, in your *.bashrc*
-file, you'd want: *source ~/cartographer_ws/install_isolated/setup.bash*
+Make sure you have Cartographer installed, see instructions at bottom of this page.
 
 Then, run on the NUC:
 
@@ -283,3 +280,33 @@ If you don't want it showing the window with predictions, then set
 *~/ras_jetson/src/darknet_ros/darknet_ros/config/ros.yaml*.
 
 Edit the *everything.launch* file to use YOLO rather than TensorFlow.
+
+## Cartographer (on NUC or Joule)
+Since we're using Cartographer 0.2.0, it's a little bit different than the
+[normal instructions](https://google-cartographer-ros.readthedocs.io/en/latest/).
+
+    # Install wstool and rosdep.
+    sudo apt-get update
+    sudo apt-get install -y python-wstool python-rosdep ninja-build
+
+    # Create a new workspace in 'catkin_ws'.
+    mkdir cartographer_ws
+    cd cartographer_ws
+    wstool init src
+
+    # Merge the cartographer_ros.rosinstall file and fetch code for dependencies.
+    wstool merge -t src https://raw.githubusercontent.com/WSU-RAS/RAS_Navigation/master/cartographer_ros.rosinstall
+    wstool update -t src
+
+    # Install deb dependencies.
+    # The command 'sudo rosdep init' will print an error if you have already
+    # executed it since installing ROS. This error can be ignored.
+    sudo rosdep init
+    rosdep update
+    rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y
+
+    # Build and install. Limit to 2 threads so we don't run out of memory.
+    ROS_PARALLEL_JOBS=-j2 catkin_make_isolated --install --use-ninja
+
+Then, if you put it in *~/cartographer_ws*, in your *.bashrc* file, you'd want:
+*source ~/cartographer_ws/install_isolated/setup.bash*
