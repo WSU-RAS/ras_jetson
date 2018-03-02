@@ -195,7 +195,7 @@ Setting up on the Jetson so you can control the servos from ROS:
 
 ## Connecting to NUC
 Since we'll run some on the Jetson and some on the NUC, we'll need to set one
-up as the ROS master.  We'll use the NUC.
+up as the ROS master.  We'll use the NUC (or Intel Joule).
 
 Jetson (since we enabled systemd-resolved earlier), so we can resolve the NUC
 hostname with LLMNR:
@@ -210,7 +210,7 @@ In *~/.bashrc* on the Jetson:
 
 or, if you have issues resolving it now and then, maybe try:
 
-    export ROS_MASTER_URI=http://$(systemd-resolve -4 wsu-ras | head -n 1 | grep -Eo "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"):11311
+    export ROS_MASTER_URI=http://wsu-ras:11311
 
 Then, replace 127.0.1.1 with 127.0.0.1 in */etc/hosts* on the Jetson.
 Otherwise, often it can't connect to the ROS master on the NUC.
@@ -223,27 +223,28 @@ In *~/.bashrc* on the NUC:
     export TURTLEBOT_3D_SENSOR=astra
     export TURTLEBOT3_MODEL=waffle
 
+Make sure you have Cartographer installed, see
+[instructions](https://google-cartographer-ros.readthedocs.io/en/latest/).
+Then, for example, if you put it in *~/cartographer_ws*, in your *.bashrc*
+file, you'd want: *source ~/cartographer_ws/install_isolated/setup.bash*
+
 Then, run on the NUC:
 
     git clone --recursive https://github.com/WSU-RAS/ras.git
     cd ras
     catkin_make
 
-    source ~/ras/devel/setup.bash
-    roscore
-    roslaunch turtlebot3_bringup turtlebot3_robot.launch
-    roslaunch turtlebot3_bringup turtlebot3_remote.launch
-    rosrun rviz rviz -d $(rospack find turtlebot3_description)/rviz/model.rviz
+Source this on login:
 
-    rosrun object_detection_msgs go_to.py
+    echo 'source ~/ras/devel/setup.bash' >> ~/.bashrc
 
-Then, run on Jetson:
+Start the navigation:
+
+    roslaunch ras_navigation RAS_Navigation.launch
+
+Then, run on Jetson start object detection:
 
     roslaunch object_detection everything.launch
-
-    # Optionally either of these, to control the camera
-    rosrun arbotix_python arbotix_gui
-    rosrun object_detector_ros demo_pan_tilt.py
 
 ## YOLO Setup (optional)
 Copy the final weights over for YOLO into the *darknet_ros* directory:
