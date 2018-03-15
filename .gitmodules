@@ -34,3 +34,6 @@
 [submodule "src/ras_msgs"]
 	path = src/ras_msgs
 	url = https://github.com/WSU-RAS/ras_msgs.git
+[submodule "src/tablet_interface"]
+	path = src/tablet_interface
+	url = https://github.com/WSU-RAS/tablet_interface.git

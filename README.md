@@ -195,7 +195,7 @@ Setting up on the Jetson so you can control the servos from ROS:
 
 ## Connecting to NUC
 Since we'll run some on the Jetson and some on the NUC, we'll need to set one
-up as the ROS master.  We'll use the NUC.
+up as the ROS master.  We'll use the NUC (or Intel Joule).
 
 Jetson (since we enabled systemd-resolved earlier), so we can resolve the NUC
 hostname with LLMNR:
@@ -210,7 +210,7 @@ In *~/.bashrc* on the Jetson:
 
 or, if you have issues resolving it now and then, maybe try:
 
-    export ROS_MASTER_URI=http://$(systemd-resolve -4 wsu-ras | head -n 1 | grep -Eo "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"):11311
+    export ROS_MASTER_URI=http://wsu-ras:11311
 
 Then, replace 127.0.1.1 with 127.0.0.1 in */etc/hosts* on the Jetson.
 Otherwise, often it can't connect to the ROS master on the NUC.
@@ -223,27 +223,25 @@ In *~/.bashrc* on the NUC:
     export TURTLEBOT_3D_SENSOR=astra
     export TURTLEBOT3_MODEL=waffle
 
+Make sure you have Cartographer installed, see instructions at bottom of this page.
+
 Then, run on the NUC:
 
     git clone --recursive https://github.com/WSU-RAS/ras.git
     cd ras
     catkin_make
 
-    source ~/ras/devel/setup.bash
-    roscore
-    roslaunch turtlebot3_bringup turtlebot3_robot.launch
-    roslaunch turtlebot3_bringup turtlebot3_remote.launch
-    rosrun rviz rviz -d $(rospack find turtlebot3_description)/rviz/model.rviz
+Source this on login:
 
-    rosrun object_detection_msgs go_to.py
+    echo 'source ~/ras/devel/setup.bash' >> ~/.bashrc
 
-Then, run on Jetson:
+Start the navigation:
+
+    roslaunch ras_navigation RAS_Navigation.launch
+
+Then, run on Jetson start object detection:
 
     roslaunch object_detection everything.launch
-
-    # Optionally either of these, to control the camera
-    rosrun arbotix_python arbotix_gui
-    rosrun object_detector_ros demo_pan_tilt.py
 
 ## YOLO Setup (optional)
 Copy the final weights over for YOLO into the *darknet_ros* directory:
@@ -282,3 +280,33 @@ If you don't want it showing the window with predictions, then set
 *~/ras_jetson/src/darknet_ros/darknet_ros/config/ros.yaml*.
 
 Edit the *everything.launch* file to use YOLO rather than TensorFlow.
+
+## Cartographer (on NUC or Joule)
+Since we're using Cartographer 0.2.0, it's a little bit different than the
+[normal instructions](https://google-cartographer-ros.readthedocs.io/en/latest/).
+
+    # Install wstool and rosdep.
+    sudo apt-get update
+    sudo apt-get install -y python-wstool python-rosdep ninja-build
+
+    # Create a new workspace in 'catkin_ws'.
+    mkdir cartographer_ws
+    cd cartographer_ws
+    wstool init src
+
+    # Merge the cartographer_ros.rosinstall file and fetch code for dependencies.
+    wstool merge -t src https://raw.githubusercontent.com/WSU-RAS/RAS_Navigation/master/cartographer_ros.rosinstall
+    wstool update -t src
+
+    # Install deb dependencies.
+    # The command 'sudo rosdep init' will print an error if you have already
+    # executed it since installing ROS. This error can be ignored.
+    sudo rosdep init
+    rosdep update
+    rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y
+
+    # Build and install. Limit to 2 threads so we don't run out of memory.
+    ROS_PARALLEL_JOBS=-j2 catkin_make_isolated --install --use-ninja
+
+Then, if you put it in *~/cartographer_ws*, in your *.bashrc* file, you'd want:
+*source ~/cartographer_ws/install_isolated/setup.bash*
